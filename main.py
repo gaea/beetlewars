@@ -3,14 +3,6 @@ from pygame.locals import *
 import random
 import time
 
-pygame.init()
-height = 720
-width = 1280
-fps = 60
-execute_game = True
-screen = pygame.display.set_mode((width, height))
-pygame.display.set_caption("Beetle Wars")
-
 
 def clip(val, minval, maxval):
     return min(max(val, minval), maxval)
@@ -29,14 +21,21 @@ class Foe(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.image.convert()
 
-foe_path_image = "pygame-icon.png"
+
+pygame.init()
+height = 720
+width = 1280
+fps = 60
+execute_game = True
+screen = pygame.display.set_mode((width, height), 0, 32)
+pygame.display.set_caption("Beetle Wars")
+foe_path_image = "data/images/pygame-icon.png"
 foes = [Foe(random.randint(0, 900), 0, foe_path_image)]
 clock = pygame.time.Clock()
 start = time.time()
+font = pygame.font.Font("data/fonts/DejaVuSans.ttf", 24)
 
 while execute_game:
-    clock.tick(fps)
-
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             sys.exit()
@@ -59,9 +58,11 @@ while execute_game:
         foes.append(Foe(random.randint(0, 900), 0, foe_path_image))
         start = time.time()
 
-    pygame.display.set_caption("[FPS]: %.2f snakes: %i" % (clock.get_fps(), len(foes)))
+    fps_label = font.render("[FPS]: %.2f snakes: %i" % (clock.get_fps(), len(foes)), True, (255, 255, 255, 255))
+    screen.blit(fps_label, (0, 0))
 
     pygame.display.flip()
+    clock.tick(fps)
     # clock.tick(40)
     # pygame.time.delay(10)
 
